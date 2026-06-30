@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-darkBg text-slate-200 antialiased selection:bg-brandPurple/30 min-h-screen overflow-x-hidden;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Premium Glassmorphism Classes */
+.glass {
+  background: rgba(15, 22, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-dark {
+  background: rgba(8, 12, 24, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.glass-card {
+  background: rgba(21, 28, 44, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  background: rgba(30, 41, 59, 0.5);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Animations & Transitions */
+.transition-glow {
+  transition: all 0.3s ease;
+}
+
+.transition-glow:hover {
+  box-shadow: 0 0 20px 2px rgba(99, 102, 241, 0.3);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+
+/* Input Styles */
+.input-field {
+  @apply bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 outline-none focus:border-brandIndigo focus:ring-1 focus:ring-brandIndigo/50 transition-all duration-200;
+}
+
+/* Button Gradients */
+.btn-primary {
+  @apply bg-gradient-to-r from-brandBlue via-brandIndigo to-brandPurple text-white font-medium rounded-xl px-5 py-3 hover:opacity-95 transform active:scale-95 transition-all duration-200 shadow-lg shadow-brandIndigo/25;
+}
+
+.btn-secondary {
+  @apply bg-slate-800/80 border border-slate-700/80 text-slate-200 font-medium rounded-xl px-5 py-3 hover:bg-slate-700/80 hover:text-white transform active:scale-95 transition-all duration-200;
+}
+
+/* Custom Gradients */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 font-extrabold;
+}
+
+.gradient-bg {
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
+              radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.1), transparent 45%);
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "a02287bfb7ccc151eea7d10b",
+    "jobId": "53f3ed83f9d371c28271954f",
+    "userId": "9a7854ee71782fa365aa3140",
+    "name": "siva",
+    "email": "siva@gmail.com",
+    "phone": "+91 1234567898",
+    "portfolio": "",
+    "github": "",
+    "coverLetter": ",m,xdlajsclasx",
+    "resume": "/uploads/resume-1782826770065-91742251.pdf",
+    "status": "Applied",
+    "createdAt": "2026-06-30T13:39:30.123Z"
+  },
+  {
+    "_id": "95d7216aeefcd6df0e93001f",
+    "jobId": "37c7ba9dfe0e63b411c1b283",
+    "userId": "9a7854ee71782fa365aa3140",
+    "name": "siva",
+    "email": "siva@gmail.com",
+    "phone": "+91 1234567898",
+    "portfolio": "",
+    "github": "",
+    "coverLetter": "",
+    "resume": "/uploads/resume-1782827334495-333813057.pdf",
+    "status": "Applied",
+    "createdAt": "2026-06-30T13:48:54.541Z"
+  }
+]

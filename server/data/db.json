@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "_id": "d29193799937956adcf5ca7f",
+      "name": "Test User",
+      "email": "test@example.com",
+      "password": "$2a$10$Z8/Mey5mx910uLBRniTn8.RbKH6gC4pqBdhrHcYSn48hHA9lhcSK6",
+      "role": "seeker",
+      "phone": "",
+      "skills": [],
+      "experience": "",
+      "portfolio": "",
+      "github": "",
+      "linkedin": "",
+      "resume": "",
+      "createdAt": "2026-06-28T14:18:54.674Z"
+    },
+    {
+      "_id": "d61ed063c502a06cb287117f",
+      "name": "siva",
+      "email": "siva12@gmail.comnnn",
+      "password": "$2a$10$hh.wDB9hpMtqNtG7s.hLlOyZV148jD9QdIqFKnIqsI2kAB.o4ZH1e",
+      "role": "seeker",
+      "phone": "+91 9342913781",
+      "skills": [],
+      "experience": "",
+      "portfolio": "",
+      "github": "",
+      "linkedin": "",
+      "resume": "",
+      "createdAt": "2026-06-30T06:27:38.682Z"
+    }
+  ],
+  "jobs": [],
+  "applications": [],
+  "savedjobs": []
+}

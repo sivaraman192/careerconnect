@@ -1,0 +1,174 @@
+[
+  {
+    "_id": "60d5ec49f30b9c3e98b7e6b2",
+    "title": "Frontend Developer",
+    "company": "TechCorp",
+    "location": "San Francisco, CA",
+    "salary": "$80,000 - $100,000",
+    "jobType": "Full-time",
+    "experience": "2+ years",
+    "skills": [
+      "React",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "description": "We are looking for a skilled Frontend Developer to join our team.",
+    "responsibilities": [
+      "Develop new user-facing features",
+      "Build reusable code and libraries for future use",
+      "Optimize application for maximum speed and scalability"
+    ],
+    "requirements": [
+      "Proven work experience as a Frontend Developer",
+      "Hands on experience with markup languages",
+      "Familiarity with browser testing and debugging"
+    ],
+    "postedBy": "60d5ec49f30b9c3e98b7e6b1",
+    "createdAt": "2026-06-30T06:42:20.489Z"
+  },
+  {
+    "_id": "60d5ec49f30b9c3e98b7e6b3",
+    "title": "React Developer",
+    "company": "WebSolutions",
+    "location": "Remote",
+    "salary": "$90,000 - $110,000",
+    "jobType": "Full-time",
+    "experience": "3+ years",
+    "skills": [
+      "React",
+      "Redux",
+      "JavaScript",
+      "TailwindCSS"
+    ],
+    "description": "Join our fast-growing startup as a React Developer.",
+    "responsibilities": [
+      "Build high quality React components",
+      "Integrate frontend with backend APIs",
+      "Participate in code reviews"
+    ],
+    "requirements": [
+      "In-depth knowledge of JavaScript and React",
+      "Experience with state management libraries like Redux",
+      "Good communication skills"
+    ],
+    "postedBy": "60d5ec49f30b9c3e98b7e6b1",
+    "createdAt": "2026-06-30T06:42:20.489Z"
+  },
+  {
+    "_id": "60d5ec49f30b9c3e98b7e6b4",
+    "title": "MERN Stack Developer",
+    "company": "AppFactory",
+    "location": "New York, NY",
+    "salary": "$100,000 - $130,000",
+    "jobType": "Full-time",
+    "experience": "3+ years",
+    "skills": [
+      "MongoDB",
+      "Express",
+      "React",
+      "Node.js"
+    ],
+    "description": "Looking for a full stack engineer proficient in the MERN stack.",
+    "responsibilities": [
+      "Design and launch frontend and backend features",
+      "Maintain code quality and deployment pipelines",
+      "Work on database optimization"
+    ],
+    "requirements": [
+      "Solid experience with MERN stack development",
+      "Familiarity with cloud hosting services (AWS/Heroku)",
+      "Strong problem solving skills"
+    ],
+    "postedBy": "60d5ec49f30b9c3e98b7e6b1",
+    "createdAt": "2026-06-30T06:42:20.489Z"
+  },
+  {
+    "_id": "60d5ec49f30b9c3e98b7e6b5",
+    "title": "Java Backend Developer",
+    "company": "EnterpriseSys",
+    "location": "Chicago, IL",
+    "salary": "$110,000 - $140,000",
+    "jobType": "Full-time",
+    "experience": "4+ years",
+    "skills": [
+      "Java",
+      "Spring Boot",
+      "SQL",
+      "Hibernate"
+    ],
+    "description": "Seeking a Senior Java Backend Developer to scale our enterprise infrastructure.",
+    "responsibilities": [
+      "Design robust APIs and microservices",
+      "Optimize database queries and transaction logic",
+      "Collaborate with frontend engineers"
+    ],
+    "requirements": [
+      "Expertise in Java and Spring Boot framework",
+      "Experience with relational databases and SQL optimization",
+      "Familiarity with CI/CD concepts"
+    ],
+    "postedBy": "60d5ec49f30b9c3e98b7e6b1",
+    "createdAt": "2026-06-30T06:42:20.489Z"
+  },
+  {
+    "_id": "60d5ec49f30b9c3e98b7e6b6",
+    "title": "UI Developer",
+    "company": "DesignCo",
+    "location": "Hybrid (Boston, MA)",
+    "salary": "$75,000 - $95,000",
+    "jobType": "Full-time",
+    "experience": "1+ years",
+    "skills": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Figma",
+      "Sass"
+    ],
+    "description": "Translate beautiful designs into semantic and pixel-perfect web pages.",
+    "responsibilities": [
+      "Build UI components from design mockups",
+      "Ensure visual consistency and responsive design",
+      "Implement minor UI animations"
+    ],
+    "requirements": [
+      "Proficient in HTML5, CSS3, and JavaScript",
+      "Familiarity with design tools like Figma or Sketch",
+      "Keen eye for typography and layout"
+    ],
+    "postedBy": "60d5ec49f30b9c3e98b7e6b1",
+    "createdAt": "2026-06-30T06:42:20.489Z"
+  },
+  {
+    "_id": "37c7ba9dfe0e63b411c1b283",
+    "title": "web developer",
+    "company": "stackkraft",
+    "location": "ariyalur",
+    "salary": "30k -40k",
+    "jobType": "Full-time",
+    "experience": "Entry",
+    "skills": [
+      "react.js"
+    ],
+    "description": "We are looking for a skilled Frontend Developer to build modern, responsive, and high-performance web applications. The candidate should have strong experience in React.js, JavaScript, and UI development. You will collaborate with designers, backend developers, and product teams to deliver scalable user-friendly applications.",
+    "responsibilities": [
+      "Develop responsive UI components",
+      "Build reusable React components",
+      "Collaborate with backend and product teams",
+      "Optimize application performance",
+      "Fix bugs and improve user experience",
+      "Write clean and maintainable code"
+    ],
+    "requirements": [
+      "2+ years frontend development experience",
+      "Strong knowledge of React.js",
+      "Good understanding of JavaScript ES6+",
+      "Experience with Tailwind CSS or Bootstrap",
+      "Knowledge of REST APIs",
+      "Good problem-solving skills"
+    ],
+    "postedBy": "0f2271c25a1ef51d888055b3",
+    "createdAt": "2026-06-30T13:48:12.585Z"
+  }
+]
