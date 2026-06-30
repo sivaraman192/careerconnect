@@ -25,8 +25,7 @@ await connectDB();
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://careerconnect-sivaraman192.netlify.app",
-  "https://careerconnect.netlify.app"
+  "https://careerprotal.netlify.app",
 ];
 
 app.use(cors({
