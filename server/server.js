@@ -23,8 +23,20 @@ const app = express();
 await connectDB();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://careerconnect-sivaraman192.netlify.app",
+  "https://careerconnect.netlify.app"
+];
+
 app.use(cors({
-  origin: '*',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || origin.endsWith('.netlify.app')) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());
