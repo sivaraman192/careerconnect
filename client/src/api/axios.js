@@ -1,7 +1,15 @@
 import axios from 'axios';
 
+console.log("API BASE URL:", import.meta.env.VITE_API_URL);
+
+let apiURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+if (apiURL && !apiURL.endsWith('/api') && !apiURL.endsWith('/api/')) {
+  const normalized = apiURL.replace(/\/$/, '');
+  apiURL = `${normalized}/api`;
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: apiURL,
 });
 
 // Request interceptor to automatically attach authorization token

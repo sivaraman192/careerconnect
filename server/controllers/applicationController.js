@@ -3,6 +3,39 @@ import Application from '../models/Application.js';
 import Job from '../models/Job.js';
 import * as dbAdapter from '../utils/dbAdapter.js';
 
+const mapAppFallback = (app) => {
+  if (!app) return null;
+  const appCopy = { ...app };
+  delete appCopy.__v;
+  if (appCopy.jobId) {
+    const job = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString());
+    if (job) {
+      const jobCopy = { ...job };
+      delete jobCopy.__v;
+      if (jobCopy.postedBy) {
+        const poster = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
+        if (poster) {
+          const posterCopy = { ...poster };
+          delete posterCopy.password;
+          delete posterCopy.__v;
+          jobCopy.postedBy = posterCopy;
+        }
+      }
+      appCopy.jobId = jobCopy;
+    }
+  }
+  if (appCopy.userId) {
+    const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
+    if (user) {
+      const userCopy = { ...user };
+      delete userCopy.password;
+      delete userCopy.__v;
+      appCopy.userId = userCopy;
+    }
+  }
+  return appCopy;
+};
+
 export const applyJob = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -94,30 +127,13 @@ export const getMyApplications = async (req, res) => {
     let applications = [];
     if (mongoose.connection.readyState === 1) {
       applications = await Application.find({ userId: req.user._id })
-        .populate('jobId')
+        .select('-__v')
+        .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
         .sort({ createdAt: -1 });
     } else {
       applications = dbAdapter.findItems('applications', a => a.userId.toString() === req.user._id.toString());
       applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      applications = applications.map(app => {
-        const appCopy = { ...app };
-        if (appCopy.jobId) {
-          const job = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString());
-          if (job) {
-            const jobCopy = { ...job };
-            if (jobCopy.postedBy) {
-              const poster = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
-              if (poster) {
-                const posterCopy = { ...poster };
-                delete posterCopy.password;
-                jobCopy.postedBy = posterCopy;
-              }
-            }
-            appCopy.jobId = jobCopy;
-          }
-        }
-        return appCopy;
-      });
+      applications = applications.map(mapAppFallback);
     }
 
     res.json({
@@ -155,18 +171,21 @@ export const getJobApplications = async (req, res) => {
     let applications = [];
     if (mongoose.connection.readyState === 1) {
       applications = await Application.find({ jobId })
-        .populate('userId')
+        .select('-__v')
+        .populate('userId', '-password -__v')
         .sort({ createdAt: -1 });
     } else {
       applications = dbAdapter.findItems('applications', a => a.jobId.toString() === jobId.toString());
       applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       applications = applications.map(app => {
         const appCopy = { ...app };
+        delete appCopy.__v;
         if (appCopy.userId) {
           const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
           if (user) {
             const userCopy = { ...user };
             delete userCopy.password;
+            delete userCopy.__v;
             appCopy.userId = userCopy;
           }
         }
@@ -196,56 +215,30 @@ export const getApplications = async (req, res) => {
     if (mongoose.connection.readyState === 1) {
       if (isAdmin) {
         applications = await Application.find({})
-          .populate('jobId')
-          .populate('userId')
+          .select('-__v')
+          .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+          .populate('userId', '-password -__v')
           .sort({ createdAt: -1 });
       } else {
         const jobs = await Job.find({ postedBy: req.user._id });
         const jobIds = jobs.map(j => j._id);
         applications = await Application.find({ jobId: { $in: jobIds } })
-          .populate('jobId')
-          .populate('userId')
+          .select('-__v')
+          .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+          .populate('userId', '-password -__v')
           .sort({ createdAt: -1 });
       }
     } else {
       if (isAdmin) {
         applications = dbAdapter.findItems('applications');
         applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        applications = applications.map(app => {
-          const appCopy = { ...app };
-          if (appCopy.jobId) {
-            appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-          }
-          if (appCopy.userId) {
-            const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-            if (user) {
-              const userCopy = { ...user };
-              delete userCopy.password;
-              appCopy.userId = userCopy;
-            }
-          }
-          return appCopy;
-        });
+        applications = applications.map(mapAppFallback);
       } else {
         const jobs = dbAdapter.findItems('jobs', j => j.postedBy.toString() === req.user._id.toString());
         const jobIds = jobs.map(j => j._id.toString());
         applications = dbAdapter.findItems('applications', a => jobIds.includes(a.jobId.toString()));
         applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        applications = applications.map(app => {
-          const appCopy = { ...app };
-          if (appCopy.jobId) {
-            appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-          }
-          if (appCopy.userId) {
-            const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-            if (user) {
-              const userCopy = { ...user };
-              delete userCopy.password;
-              appCopy.userId = userCopy;
-            }
-          }
-          return appCopy;
-        });
+        applications = applications.map(mapAppFallback);
       }
     }
 
@@ -275,56 +268,30 @@ export const getCandidatePipeline = async (req, res) => {
     if (mongoose.connection.readyState === 1) {
       if (isAdmin) {
         applications = await Application.find({})
-          .populate('jobId')
-          .populate('userId')
+          .select('-__v')
+          .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+          .populate('userId', '-password -__v')
           .sort({ createdAt: -1 });
       } else {
         const jobs = await Job.find({ postedBy: req.user._id });
         const jobIds = jobs.map(j => j._id);
         applications = await Application.find({ jobId: { $in: jobIds } })
-          .populate('jobId')
-          .populate('userId')
+          .select('-__v')
+          .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+          .populate('userId', '-password -__v')
           .sort({ createdAt: -1 });
       }
     } else {
       if (isAdmin) {
         applications = dbAdapter.findItems('applications');
         applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        applications = applications.map(app => {
-          const appCopy = { ...app };
-          if (appCopy.jobId) {
-            appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-          }
-          if (appCopy.userId) {
-            const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-            if (user) {
-              const userCopy = { ...user };
-              delete userCopy.password;
-              appCopy.userId = userCopy;
-            }
-          }
-          return appCopy;
-        });
+        applications = applications.map(mapAppFallback);
       } else {
         const jobs = dbAdapter.findItems('jobs', j => j.postedBy.toString() === req.user._id.toString());
         const jobIds = jobs.map(j => j._id.toString());
         applications = dbAdapter.findItems('applications', a => jobIds.includes(a.jobId.toString()));
         applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        applications = applications.map(app => {
-          const appCopy = { ...app };
-          if (appCopy.jobId) {
-            appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-          }
-          if (appCopy.userId) {
-            const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-            if (user) {
-              const userCopy = { ...user };
-              delete userCopy.password;
-              appCopy.userId = userCopy;
-            }
-          }
-          return appCopy;
-        });
+        applications = applications.map(mapAppFallback);
       }
     }
 
@@ -373,24 +340,13 @@ export const getApplicationById = async (req, res) => {
     let application;
     if (mongoose.connection.readyState === 1) {
       application = await Application.findById(id)
-        .populate('jobId')
-        .populate('userId');
+        .select('-__v')
+        .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+        .populate('userId', '-password -__v');
     } else {
       application = dbAdapter.findOne('applications', a => a._id.toString() === id.toString());
       if (application) {
-        const appCopy = { ...application };
-        if (appCopy.jobId) {
-          appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-        }
-        if (appCopy.userId) {
-          const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-          if (user) {
-            const userCopy = { ...user };
-            delete userCopy.password;
-            appCopy.userId = userCopy;
-          }
-        }
-        application = appCopy;
+        application = mapAppFallback(application);
       }
     }
 
@@ -455,29 +411,16 @@ export const getRecruiterApplications = async (req, res) => {
       const jobs = await Job.find({ postedBy: req.user._id });
       const jobIds = jobs.map(j => j._id);
       applications = await Application.find({ jobId: { $in: jobIds } })
-        .populate('jobId')
-        .populate('userId')
+        .select('-__v')
+        .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+        .populate('userId', '-password -__v')
         .sort({ createdAt: -1 });
     } else {
       const jobs = dbAdapter.findItems('jobs', j => j.postedBy.toString() === req.user._id.toString());
       const jobIds = jobs.map(j => j._id.toString());
       applications = dbAdapter.findItems('applications', a => jobIds.includes(a.jobId.toString()));
       applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      applications = applications.map(app => {
-        const appCopy = { ...app };
-        if (appCopy.jobId) {
-          appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-        }
-        if (appCopy.userId) {
-          const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-          if (user) {
-            const userCopy = { ...user };
-            delete userCopy.password;
-            appCopy.userId = userCopy;
-          }
-        }
-        return appCopy;
-      });
+      applications = applications.map(mapAppFallback);
     }
     res.json({ success: true, applications: applications || [] });
   } catch (error) {
@@ -539,23 +482,14 @@ export const updateApplicationStatus = async (req, res) => {
         id,
         { $set: updatedFields },
         { new: true }
-      ).populate('jobId').populate('userId');
+      )
+        .select('-__v')
+        .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+        .populate('userId', '-password -__v');
     } else {
       updatedApp = dbAdapter.updateItem('applications', id, updatedFields);
       if (updatedApp) {
-        const appCopy = { ...updatedApp };
-        if (appCopy.jobId) {
-          appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-        }
-        if (appCopy.userId) {
-          const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-          if (user) {
-            const userCopy = { ...user };
-            delete userCopy.password;
-            appCopy.userId = userCopy;
-          }
-        }
-        updatedApp = appCopy;
+        updatedApp = mapAppFallback(updatedApp);
       }
     }
 
@@ -648,23 +582,14 @@ export const scheduleInterview = async (req, res) => {
         id,
         { $set: updatedFields },
         { new: true }
-      ).populate('jobId').populate('userId');
+      )
+        .select('-__v')
+        .populate({ path: 'jobId', select: '-__v', populate: { path: 'postedBy', select: '-password -__v' } })
+        .populate('userId', '-password -__v');
     } else {
       updatedApp = dbAdapter.updateItem('applications', id, updatedFields);
       if (updatedApp) {
-        const appCopy = { ...updatedApp };
-        if (appCopy.jobId) {
-          appCopy.jobId = dbAdapter.findOne('jobs', j => j._id.toString() === appCopy.jobId.toString()) || appCopy.jobId;
-        }
-        if (appCopy.userId) {
-          const user = dbAdapter.findOne('users', u => u._id.toString() === appCopy.userId.toString());
-          if (user) {
-            const userCopy = { ...user };
-            delete userCopy.password;
-            appCopy.userId = userCopy;
-          }
-        }
-        updatedApp = appCopy;
+        updatedApp = mapAppFallback(updatedApp);
       }
     }
 

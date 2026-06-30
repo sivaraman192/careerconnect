@@ -57,19 +57,16 @@ export const getSavedJobs = async (req, res) => {
     const jobs = [];
 
     if (mongoose.connection.readyState === 1) {
-      const saved = await SavedJob.find({ userId: req.user._id }).populate('jobId');
+      const saved = await SavedJob.find({ userId: req.user._id }).populate({ path: 'jobId', select: '-__v' });
       for (let item of saved) {
         if (item.jobId) {
-          let job = item.jobId;
-          if (job.postedBy && typeof job.postedBy === 'string') {
-            const postedByUser = await User.findById(job.postedBy);
+          let job = item.jobId.toObject ? item.jobId.toObject() : item.jobId;
+          delete job.__v;
+          if (job.postedBy) {
+            const postedByUser = await User.findById(job.postedBy).select('-password -__v');
             if (postedByUser) {
-              const userCopy = { ...postedByUser };
-              delete userCopy.password;
-              job.postedBy = userCopy;
+              job.postedBy = postedByUser.toObject();
             }
-          } else if (job.postedBy && job.postedBy._id && typeof job.postedBy.password !== 'undefined') {
-            delete job.postedBy.password;
           }
           jobs.push(job);
         }
@@ -81,11 +78,13 @@ export const getSavedJobs = async (req, res) => {
           const job = dbAdapter.findOne('jobs', j => j._id.toString() === item.jobId.toString());
           if (job) {
             const jobCopy = { ...job };
+            delete jobCopy.__v;
             if (jobCopy.postedBy) {
               const postedByUser = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
               if (postedByUser) {
                 const userCopy = { ...postedByUser };
                 delete userCopy.password;
+                delete userCopy.__v;
                 jobCopy.postedBy = userCopy;
               }
             }

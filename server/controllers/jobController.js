@@ -34,7 +34,7 @@ export const getJobs = async (req, res) => {
           filter.skills = { $in: skillsArr };
         }
       }
-      jobs = await Job.find(filter).populate('postedBy').sort({ createdAt: -1 });
+      jobs = await Job.find(filter).select('-__v').populate('postedBy', '-password -__v').sort({ createdAt: -1 });
     } else {
       jobs = dbAdapter.findItems('jobs', (j) => {
         if (search) {
@@ -70,11 +70,13 @@ export const getJobs = async (req, res) => {
 
       jobs = jobs.map(job => {
         const jobCopy = { ...job };
+        delete jobCopy.__v;
         if (jobCopy.postedBy) {
           const user = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
           if (user) {
             const userCopy = { ...user };
             delete userCopy.password;
+            delete userCopy.__v;
             jobCopy.postedBy = userCopy;
           }
         }
@@ -99,16 +101,18 @@ export const getJobById = async (req, res) => {
   try {
     let job;
     if (mongoose.connection.readyState === 1) {
-      job = await Job.findById(req.params.id).populate('postedBy');
+      job = await Job.findById(req.params.id).select('-__v').populate('postedBy', '-password -__v');
     } else {
       job = dbAdapter.findOne('jobs', j => j._id.toString() === req.params.id.toString());
       if (job) {
         const jobCopy = { ...job };
+        delete jobCopy.__v;
         if (jobCopy.postedBy) {
           const user = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
           if (user) {
             const userCopy = { ...user };
             delete userCopy.password;
+            delete userCopy.__v;
             jobCopy.postedBy = userCopy;
           }
         }
@@ -236,16 +240,18 @@ export const updateJob = async (req, res) => {
 
     let updatedJob;
     if (mongoose.connection.readyState === 1) {
-      updatedJob = await Job.findByIdAndUpdate(req.params.id, { $set: updatedFields }, { new: true }).populate('postedBy');
+      updatedJob = await Job.findByIdAndUpdate(req.params.id, { $set: updatedFields }, { new: true }).select('-__v').populate('postedBy', '-password -__v');
     } else {
       updatedJob = dbAdapter.updateItem('jobs', req.params.id, updatedFields);
       if (updatedJob) {
         const jobCopy = { ...updatedJob };
+        delete jobCopy.__v;
         if (jobCopy.postedBy) {
           const user = dbAdapter.findOne('users', u => u._id.toString() === jobCopy.postedBy.toString());
           if (user) {
             const userCopy = { ...user };
             delete userCopy.password;
+            delete userCopy.__v;
             jobCopy.postedBy = userCopy;
           }
         }
